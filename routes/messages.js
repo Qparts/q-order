@@ -28,4 +28,44 @@ router.get('/:conversationId', async (req, res) => {
 });
 
 
+router.post('/unseen', async (req, res) => {
+    try {
+        const conversations = req.body.conversations;
+        const sender = req.body.sender;
+        const messages = await Message.find({
+            status: 'I',
+            sender: { $ne: sender },
+            conversationId: { $in: conversations }
+        });
+        res.status(200).json(messages);
+
+    } catch (error) {
+        res.status(500).json(error);
+    }
+});
+
+router.put('/', async (req, res) => {
+    try {
+        const message = new Message(req.body);
+        const updatedMessage = await Message.update({ _id: message._id }, message);
+        res.status(200).json(updatedMessage);
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json(error);
+    }
+});
+
+router.put('/seen/:conversationId/:sender', async (req, res) => {
+    try {
+        const updatedConversation = await Message.updateMany(
+            { conversationId: req.params.conversationId, sender: { $ne:  req.params.sender } },
+            { $set: { status: 'S' } }
+        );
+        res.status(200).json(updatedConversation);
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json(error);
+    }
+});
+
 module.exports = router;
