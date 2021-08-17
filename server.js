@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 const evn = require("dotenv");
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const conversationRoutes = require('./routes/conversation');
 const messageRoutes = require('./routes/messages');
@@ -21,10 +22,14 @@ const db_connection_Url = isProd ?
     :`mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`;
 
 console.log(db_connection_Url);
-const options = isProd ? { useNewUrlParser: true, 
+const options = isProd ? { useNewUrlParser: true,
+    auth: {
+        authSource : "admin"
+    },
     ssl:true,
     sslValidate: false, 
-    sslCA: require('fs').readFileSync(`${process.env.MONGODB_CERT_FILE}`)
+    sslCA: fs.readFileSync(`${process.env.MONGODB_CERT_FILE}`)
+    
 } : {}; 
 
 
