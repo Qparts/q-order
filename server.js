@@ -13,8 +13,11 @@ evn.config();
 app.use(express.json());
 app.use(cors());
 
+const db_connection_Url = process.env.MONGODB_HOST == 'localhost' ? `mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}` :
+    `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_CHAT_DB}`
 
-mongoose.connect(`mongodb://${process.env.MONGODB_HOST}/chat`)
+
+mongoose.connect(db_connection_Url, { useNewUrlParser: true })
     .then(() => console.log('Connected to MongoDB....'))
     .catch(err => console.log('Could not connect to MongoDB...', err));
 
