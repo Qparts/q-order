@@ -18,7 +18,7 @@ const db_connection_Url = process.env.MONGODB_HOST == 'localhost' ? `mongodb://$
 
 console.log(db_connection_Url);
 
-mongoose.connect(db_connection_Url, { useNewUrlParser: true })
+mongoose.connect(db_connection_Url, { useNewUrlParser: true, allowConnectionsWithoutCertificates: true })
     .then(() => console.log('Connected to MongoDB....'))
     .catch(err => console.log('Could not connect to MongoDB...', err));
 
