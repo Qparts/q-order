@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 const db_connection_Url = process.env.MONGODB_HOST == 'localhost' ? `mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}` :
-    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_CHAT_DB}`
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`
 
 console.log(db_connection_Url);
 
