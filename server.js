@@ -13,16 +13,22 @@ evn.config();
 app.use(express.json());
 app.use(cors());
 
-const db_connection_Url = process.env.MONGODB_HOST == 'localhost' ? `mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}` :
+
+const isProd = process.env.MONGODB_HOST == 'localhost';
+console.log(isProd);
+const db_connection_Url = isProd ?
     `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`
+    :`mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`;
 
 console.log(db_connection_Url);
+const options = isProd ? { useNewUrlParser: true, 
+    ssl:true,
+    sslValidate: false, 
+    sslCA: require('fs').readFileSync(`${process.env.MONGODB_CERT_FILE}`)
+} : {}; 
 
-mongoose.connect(db_connection_Url, { 
-    useNewUrlParser: true,
-    ssl: false,
-    tls: false,
-    })
+
+mongoose.connect(db_connection_Url, options)
     .then(() => console.log('Connected to MongoDB....'))
     .catch(err => console.log('Could not connect to MongoDB...', err));
 
