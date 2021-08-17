@@ -16,6 +16,7 @@ app.use(cors());
 const db_connection_Url = process.env.MONGODB_HOST == 'localhost' ? `mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}` :
     `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_CHAT_DB}`
 
+console.log(db_connection_Url);
 
 mongoose.connect(db_connection_Url, { useNewUrlParser: true })
     .then(() => console.log('Connected to MongoDB....'))
