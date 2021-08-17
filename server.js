@@ -22,8 +22,7 @@ mongoose.connect(db_connection_Url, {
     useNewUrlParser: true,
     ssl: false,
     tls: false,
-    useUnifiedTopology: true}
-    )
+    })
     .then(() => console.log('Connected to MongoDB....'))
     .catch(err => console.log('Could not connect to MongoDB...', err));
 
