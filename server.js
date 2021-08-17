@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 
-const isProd = process.env.MONGODB_HOST == 'localhost';
+const isProd = process.env.MONGODB_HOST !== 'localhost';
 console.log(isProd);
 const db_connection_Url = isProd ?
     `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`
