@@ -21,6 +21,9 @@ const MessageSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'I'
+    },
+    companyId: {
+        type: Number
     }
 
 
