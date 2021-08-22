@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Message = require('../model/Message');
+const auth = require('../middleware/auth')
 
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const newMessage = new Message(req.body);
         const savedMessage = await newMessage.save();
@@ -15,7 +16,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.get('/:conversationId', async (req, res) => {
+router.get('/:conversationId', auth, async (req, res) => {
     try {
         const messages = await Message.find({
             conversationId: req.params.conversationId
@@ -28,7 +29,7 @@ router.get('/:conversationId', async (req, res) => {
 });
 
 
-router.post('/unseen', async (req, res) => {
+router.post('/unseen', auth, async (req, res) => {
     try {
         const conversations = req.body.conversations;
         const sender = req.body.sender;
@@ -44,7 +45,7 @@ router.post('/unseen', async (req, res) => {
     }
 });
 
-router.put('/', async (req, res) => {
+router.put('/', auth, async (req, res) => {
     try {
         const message = new Message(req.body);
         const updatedMessage = await Message.update({ _id: message._id }, message);
@@ -55,10 +56,10 @@ router.put('/', async (req, res) => {
     }
 });
 
-router.put('/seen/:conversationId/:sender', async (req, res) => {
+router.put('/seen/:conversationId/:sender', auth, async (req, res) => {
     try {
         const updatedConversation = await Message.updateMany(
-            { conversationId: req.params.conversationId, sender: { $ne:  req.params.sender } },
+            { conversationId: req.params.conversationId, sender: { $ne: req.params.sender } },
             { $set: { status: 'S' } }
         );
         res.status(200).json(updatedConversation);

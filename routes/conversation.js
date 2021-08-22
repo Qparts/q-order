@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Conversation = require("../model/Conversation");
+const auth = require('../middleware/auth')
 
-router.post("/", async (req, res) => {
+router.post("/",auth, async (req, res) => {
   try {
     const newConversation = new Conversation({
       members: req.body.members,
@@ -15,7 +16,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/conversations/summary", async (req, res) => {
+router.get("/conversations/summary", auth, async (req, res) => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const totalConversations = await Conversation.count(); //total documents
@@ -26,7 +27,7 @@ router.get("/conversations/summary", async (req, res) => {
   return res.status(200).json(result);
 });
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId",auth, async (req, res) => {
   try {
     const conversation = await Conversation.find({
       "members.id": req.params.userId,
