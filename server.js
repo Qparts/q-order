@@ -1,25 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const env = require("dotenv");
 const mongoose = require("mongoose");
 const fs = require("fs");
 
 const conversationRoutes = require("./routes/conversation");
 const messageRoutes = require("./routes/messages");
-
-env.config();
+require("dotenv").config();
 
 app.use(express.json());
 app.use(cors());
 
 const isProd = process.env.MONGODB_HOST !== "localhost";
-console.log(isProd);
 const db_connection_Url = isProd
   ? `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`
   : `mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_CHAT_DB}`;
 
-console.log(db_connection_Url);
 const options = isProd
   ? {
       useNewUrlParser: true,

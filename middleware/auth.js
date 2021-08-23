@@ -1,14 +1,9 @@
 const _ = require("lodash");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const env = require("dotenv");
-
-env.config();
+require("dotenv").config();
 
 module.exports = function (req, res, next) {
-  console.log("directory ", process.env.KEY_FILE_DIRECTORY);
-  console.log("file ", process.env.KEY_FILE);
-
   let publicKey = fs.readFileSync(
     `${process.env.KEY_FILE_DIRECTORY}/${process.env.KEY_FILE}`,
     "utf8"
