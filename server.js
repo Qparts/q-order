@@ -1,14 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const evn = require("dotenv");
+const env = require("dotenv");
 const mongoose = require("mongoose");
 const fs = require("fs");
 
 const conversationRoutes = require("./routes/conversation");
 const messageRoutes = require("./routes/messages");
 
-evn.config();
+env.config();
 
 app.use(express.json());
 app.use(cors());

@@ -1,6 +1,9 @@
 const _ = require("lodash");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
+const env = require("dotenv");
+
+env.config();
 
 module.exports = function (req, res, next) {
   console.log("directory ", process.env.KEY_FILE_DIRECTORY);
