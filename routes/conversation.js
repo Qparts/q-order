@@ -29,6 +29,7 @@ router.get("/conversations/summary", auth, async (req, res) => {
 
 router.get("/user-conversations", auth, async (req, res) => {
   try {
+    console.log("user is ", req.user);
     const conversation = await Conversation.find({
       "members.id": req.user.sub,
     });
