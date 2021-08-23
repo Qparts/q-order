@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Conversation = require("../model/Conversation");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 router.post("/", auth, async (req, res) => {
   try {
@@ -16,7 +17,7 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-router.get("/conversations/summary", auth, async (req, res) => {
+router.get("/conversations/summary", [auth, admin], async (req, res) => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const totalConversations = await Conversation.count(); //total documents
