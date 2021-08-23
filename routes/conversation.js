@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Conversation = require("../model/Conversation");
-const auth = require('../middleware/auth')
+const auth = require("../middleware/auth");
 
-router.post("/",auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const newConversation = new Conversation({
       members: req.body.members,
@@ -27,10 +27,10 @@ router.get("/conversations/summary", auth, async (req, res) => {
   return res.status(200).json(result);
 });
 
-router.get("/:userId",auth, async (req, res) => {
+router.get("/user-conversations", auth, async (req, res) => {
   try {
     const conversation = await Conversation.find({
-      "members.id": req.params.userId,
+      "members.id": req.user.sub,
     });
     res.status(200).json(conversation);
   } catch (error) {
