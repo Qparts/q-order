@@ -30,13 +30,11 @@ router.get("/conversations/summary", [auth, admin], async (req, res) => {
 
 router.get("/user-conversations", auth, async (req, res) => {
   try {
-    console.log("user is ", req.user);
     const conversation = await Conversation.find({
       "members.id": req.user.sub,
     });
     res.status(200).json(conversation);
   } catch (error) {
-    console.log("error", error);
     res.status(500).json(error);
   }
 });
