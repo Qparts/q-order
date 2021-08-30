@@ -18,9 +18,15 @@ router.post('/', auth, async (req, res) => {
 
 router.get('/:conversationId', auth, async (req, res) => {
     try {
+        const count = +req.query.count;
+        const page = +req.query.page;
+        // const messages = await Message.find({
+        //     conversationId: req.params.conversationId
+        // });
+
         const messages = await Message.find({
             conversationId: req.params.conversationId
-        });
+        }).skip(count * (page - 1)).sort({"createdAt": -1}).limit(count);
         res.status(200).json(messages);
 
     } catch (error) {
