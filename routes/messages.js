@@ -71,6 +71,7 @@ router.put("/seen/:conversationId/:sender", auth, async (req, res) => {
       {
         conversationId: req.params.conversationId,
         sender: { $ne: req.params.sender },
+        status: "I"
       },
       { $set: { status: "S" } }
     );
