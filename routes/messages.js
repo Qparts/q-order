@@ -2,12 +2,48 @@ const express = require("express");
 const router = express.Router();
 const Message = require("../model/Message");
 const auth = require("../middleware/auth");
+const Conversation = require("../model/Conversation");
 
 router.post("/", auth, async (req, res) => {
   try {
     const newMessage = new Message(req.body);
     const savedMessage = await newMessage.save();
     res.status(200).json(savedMessage);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/latest-messages", auth, async (req, res) => {
+  try {
+
+    //get latest 50 messages.
+    const latestMessages = await Message.find().sort({ createdAt: -1 }).limit(50);
+   
+    //get converations id from message list.
+    const conversationSet = new Set();
+    for (let message of latestMessages) {
+      conversationSet.add(message.conversationId);
+    }
+
+
+    //get converations of latest messages.
+    const totalConversations = await Conversation.find({ _id: { $in: [...conversationSet] } })
+
+    //grouping latest message with their conversation.
+    latestMessageDetails = [];
+    for (let conversation of totalConversations) {
+      let messageItem = { conversation: conversation, messages: [] };
+      for (let message of latestMessages) {
+        if (message.conversationId == conversation._id) {
+          messageItem.messages.push(message);
+        }
+      }
+
+      latestMessageDetails.push(messageItem);
+    }
+
+    res.status(200).json(latestMessageDetails);
   } catch (error) {
     res.status(500).json(error);
   }
