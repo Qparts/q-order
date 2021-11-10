@@ -19,7 +19,7 @@ router.get("/latest-messages", auth, async (req, res) => {
 
     //get latest 50 messages.
     const latestMessages = await Message.find().sort({ createdAt: -1 }).limit(50);
-   
+
     //get converations id from message list.
     const conversationSet = new Set();
     for (let message of latestMessages) {
@@ -44,6 +44,27 @@ router.get("/latest-messages", auth, async (req, res) => {
     }
 
     res.status(200).json(latestMessageDetails);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.get("/previous-orders", auth, async (req, res) => {
+  try {
+    const loginUser = req.user;
+    const count = +req.query.count;
+    const page = +req.query.page;
+    const messages = await Message.paginate(
+      { companyId: loginUser.comp, contentType: "order" },
+      {
+        page,
+        limit: count,
+        sort: {
+          createdAt: -1, //Sort by Date Added DESC
+        },
+      }
+    );
+    res.status(200).json(messages);
   } catch (error) {
     res.status(500).json(error);
   }
