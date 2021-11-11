@@ -54,8 +54,14 @@ router.get("/previous-orders", auth, async (req, res) => {
     const loginUser = req.user;
     const count = +req.query.count;
     const page = +req.query.page;
+    const companyId = +req.query.companyId;
+    var companyQuery = '"companyId"' + ":";
     const messages = await Message.paginate(
-      { companyId: loginUser.comp, contentType: "order" },
+      {
+        companyId: loginUser.comp,
+        contentType: "order",
+        text: { $regex: companyId == 0 || !companyId ? companyQuery : companyQuery + companyId }
+      },
       {
         page,
         limit: count,
