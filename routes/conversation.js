@@ -3,6 +3,7 @@ const router = express.Router();
 const Conversation = require("../model/Conversation");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const Message = require("../model/Message");
 
 router.post("/", auth, async (req, res) => {
   try {
@@ -34,6 +35,39 @@ router.get("/user-conversations", auth, async (req, res) => {
       "members.id": req.user.sub,
     });
     res.status(200).json(conversation);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+router.get("/compnaies-orders-conversations", auth, async (req, res) => {
+  try {
+    const conversations = await Conversation.find({
+      "members.id": req.user.sub,
+    });
+
+    let userConversationsCompanies = [];
+    
+    for (let conversation of conversations) {
+
+      const messages = await Message.find({
+        conversationId: conversation._id,
+        contentType: 'order'
+      });
+
+      if (messages.length > 0) {
+        conversation.members.filter(x => x.companyId != req.user.comp).forEach(member => {
+          userConversationsCompanies.push({
+            companyId: member.companyId,
+            companyName: member.companyName,
+            companyNameAr: member.companyNameAr
+          })
+        });
+      }
+    }
+
+    res.status(200).json(userConversationsCompanies);
   } catch (error) {
     res.status(500).json(error);
   }
