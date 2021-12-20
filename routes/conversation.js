@@ -47,8 +47,8 @@ router.get("/compnaies-orders-conversations", auth, async (req, res) => {
       "members.id": req.user.sub,
     });
 
-    let userConversationsCompanies = [];
-    
+    let userConversationsCompanies = new Set();
+
     for (let conversation of conversations) {
 
       const messages = await Message.find({
@@ -58,7 +58,7 @@ router.get("/compnaies-orders-conversations", auth, async (req, res) => {
 
       if (messages.length > 0) {
         conversation.members.filter(x => x.companyId != req.user.comp).forEach(member => {
-          userConversationsCompanies.push({
+          userConversationsCompanies.add({
             companyId: member.companyId,
             companyName: member.companyName,
             companyNameAr: member.companyNameAr
@@ -67,7 +67,7 @@ router.get("/compnaies-orders-conversations", auth, async (req, res) => {
       }
     }
 
-    res.status(200).json(userConversationsCompanies);
+    res.status(200).json(Array.from(userConversationsCompanies));
   } catch (error) {
     res.status(500).json(error);
   }
